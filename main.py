@@ -22,9 +22,13 @@ plus_upgrade_price_text = wrap.sprite.add_text("0", 820, 20, font_size=30, bold=
 plus_upgrade_amount_text = wrap.sprite.add_text("0", 820, 60, font_size=30, bold=True, text_color=[36, 197, 10], back_color=[17, 57, 10])
 
 worker1 = wrap.sprite.add("worker", 300, 600, "worker1")
+
 worker2 = wrap.sprite.add("worker", 500, 550, "worker2_inv")
+music_up = wrap.sprite.add("controls", 520, 570, "up_yellow")
+music_upgrade_price_text = wrap.sprite.add_text("0", 550, 570, font_size=30, bold=True, text_color=[238, 157, 1], back_color=[57, 28, 1])
 
-
+wrap.sprite.add("controls", 520, 610, "clock")
+music_time_grow_text = wrap.sprite.add_text("0", 550, 610, font_size=30, bold=True, text_color=[136, 0, 27], back_color=[57, 0, 17])
 
 def change_money(text_id, new_money, prefix="", postfix="", left_side=True):
     text = prefix+str(int(new_money))+postfix
@@ -65,6 +69,17 @@ def change_plus_upgrade_amount_money(new_money):
     click_plus_upgrade=new_money
     change_money(plus_upgrade_amount_text, new_money, "+", " за клик", False)
 
+def change_music_buy_price(new_money):
+    global music_buy_price
+    music_buy_price=new_money
+    change_money(music_upgrade_price_text, new_money)
+
+def change_music_time_upgrade(new_grow):
+    global music_time_upgrade
+    music_time_upgrade=new_grow
+    change_money(music_time_grow_text, new_grow, "+")
+
+
 def upgrade_click():
     if money < click_plus_upgrade_price:
         return
@@ -74,12 +89,31 @@ def upgrade_click():
     change_plus_upgrade_money(click_plus_upgrade_price*click_plus_upgrade_price_grow)
     change_plus_upgrade_amount_money(click_plus_upgrade+2)
 
+def upgrade_music():
+    global music_buy_price_grow
+    if money<music_buy_price:
+        return
+
+    if wrap.sprite.get_costume(worker2)=="worker2_inv":
+        wrap.sprite.set_costume(worker2, "worker2")
+
+    change_coin_money(money - music_buy_price)
+    change_music_buy_price(music_buy_price*music_buy_price_grow)
+    music_buy_price_grow+=music_buy_price_grow_grow
+
+    change_clock_money(time_plus+music_time_upgrade)
+    change_music_time_upgrade(music_time_upgrade+music_time_upgrade_grow)
+
+
+
 @wrap.on_mouse_down(wrap.BUTTON_LEFT)
 def click(pos_x, pos_y):
     if wrap.sprite.is_collide_point(up_coin, pos_x, pos_y, True):
         upgrade_click()
-        return
-    change_coin_money(money + click_plus)
+    elif wrap.sprite.is_collide_point(music_up, pos_x, pos_y, True):
+        upgrade_music()
+    else:
+        change_coin_money(money + click_plus)
 
 
 @wrap.always(1000)
@@ -87,7 +121,7 @@ def tick():
     change_coin_money(money + time_plus)
 
 
-money = 0 #сколько всего денег
+money = 1000000 #сколько всего денег
 
 click_plus = 2 #денег за один клик
 click_plus_upgrade = 2 #на сколько вырастет доход за клик при апгрейде
@@ -97,8 +131,16 @@ click_plus_upgrade_price_grow = 1.05 #на сколько вырастет це�
 
 time_plus = 0
 
+music_buy_price = 10000 #стоимость покупки музыканта
+music_buy_price_grow = 1.02
+music_buy_price_grow_grow = 0.02
+music_time_upgrade=1
+music_time_upgrade_grow=1
+
 change_coin_money(money)
 change_plus_money(click_plus)
 change_clock_money(time_plus)
 change_plus_upgrade_money(click_plus_upgrade_price)
 change_plus_upgrade_amount_money(click_plus_upgrade)
+change_music_buy_price(music_buy_price)
+change_music_time_upgrade(music_time_upgrade)
