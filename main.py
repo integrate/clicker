@@ -8,11 +8,11 @@ wrap.world.create_world(1200, 700)
 
 place = wrap.sprite.add("place", 600, 350, "place1")
 
-coin_icon=wrap.sprite.add("controls", 900, 20, "coin")
+coin_icon = wrap.sprite.add("controls", 900, 20, "coin")
 coin_text = wrap.sprite.add_text("0", 930, 20, font_size=30, bold=True, text_color=[238, 157, 1],
                                  back_color=[57, 28, 1])
 
-plus_icon=wrap.sprite.add("controls", 900, 60, "plus")
+plus_icon = wrap.sprite.add("controls", 900, 60, "plus")
 plus_text = wrap.sprite.add_text("0", 930, 60, font_size=30, bold=True, text_color=[36, 197, 10],
                                  back_color=[17, 57, 10])
 
@@ -28,23 +28,22 @@ plus_upgrade_amount_text = wrap.sprite.add_text("0", 820, 60, font_size=30, bold
 
 worker1 = wrap.sprite.add("worker", 100, 600, "worker1")
 worker1_level_text = wrap.sprite.add_text("0", 130, 495, font_size=15, bold=True, text_color=[36, 197, 10],
-                                                back_color=[17, 57, 10])
-
+                                          back_color=[17, 57, 10])
 
 worker2 = wrap.sprite.add("worker", 300, 550, "worker2_inv")
 worker2_level_text = wrap.sprite.add_text("0", 300, 390, font_size=15, bold=True, text_color=[36, 197, 10],
-                                                back_color=[17, 57, 10])
+                                          back_color=[17, 57, 10])
 music_up = wrap.sprite.add("controls", 320, 570, "up_yellow")
 music_upgrade_price_text = wrap.sprite.add_text("0", 350, 570, font_size=30, bold=True, text_color=[238, 157, 1],
                                                 back_color=[57, 28, 1])
 
-music_clock_icon=wrap.sprite.add("controls", 320, 610, "clock")
+music_clock_icon = wrap.sprite.add("controls", 320, 610, "clock")
 music_time_grow_text = wrap.sprite.add_text("0", 350, 610, font_size=30, bold=True, text_color=[136, 0, 27],
                                             back_color=[57, 0, 17])
 
 worker3 = wrap.sprite.add("worker", 550, 550, "worker3_inv", False)
 worker3_level_text = wrap.sprite.add_text("0", 550, 390, font_size=15, bold=True, text_color=[36, 197, 10],
-                                                back_color=[17, 57, 10], visible=False)
+                                          back_color=[17, 57, 10], visible=False)
 
 singer_up = wrap.sprite.add("controls", 590, 570, "up_yellow", False)
 singer_upgrade_price_text = wrap.sprite.add_text("0", 620, 570, font_size=30, bold=True, text_color=[238, 157, 1],
@@ -56,7 +55,7 @@ singer_time_grow_text = wrap.sprite.add_text("0", 620, 610, font_size=30, bold=T
 
 business1 = wrap.sprite.add("business", 730, 330, "business1_inv", False)
 business1_level_text = wrap.sprite.add_text("0", 700, 220, font_size=15, bold=True, text_color=[36, 197, 10],
-                                                back_color=[17, 57, 10], visible=False)
+                                            back_color=[17, 57, 10], visible=False)
 
 business1_up = wrap.sprite.add("controls", 830, 330, "up_yellow", False)
 business1_upgrade_price_text = wrap.sprite.add_text("0", 860, 330, font_size=30, bold=True, text_color=[238, 157, 1],
@@ -68,7 +67,7 @@ business1_time_grow_text = wrap.sprite.add_text("0", 860, 370, font_size=30, bol
 
 business2 = wrap.sprite.add("business", 950, 580, "business2_inv", False)
 business2_level_text = wrap.sprite.add_text("0", 920, 470, font_size=15, bold=True, text_color=[36, 197, 10],
-                                                back_color=[17, 57, 10], visible=False)
+                                            back_color=[17, 57, 10], visible=False)
 
 business2_up = wrap.sprite.add("controls", 1030, 550, "up_yellow", False)
 business2_upgrade_price_text = wrap.sprite.add_text("0", 1060, 550, font_size=30, bold=True, text_color=[238, 157, 1],
@@ -79,8 +78,26 @@ business2_time_grow_text = wrap.sprite.add_text("0", 1060, 590, font_size=30, bo
                                                 back_color=[57, 0, 17], visible=False)
 
 
+def make_money_text(money):
+    money = int(money)
+    mln = money // 1000000
+    money %= 1000000
+    k = money//1000
+    money %= 1000
+
+    res = ""
+    if mln!=0:
+        res+=str(mln)+"mln "
+    if k!=0:
+        res+=str(k)+"K "
+
+    res += str(money)
+
+    return res
+
+
 def change_money(text_id, new_money, prefix="", postfix="", left_side=True):
-    text = prefix + str(int(new_money)) + postfix
+    text = prefix + make_money_text(new_money) + postfix
     if left_side:
         l = wrap.sprite.get_left(text_id)
         wrap.sprite_text.set_text(text_id, text)
@@ -120,15 +137,18 @@ def change_plus_upgrade_amount_money(new_money):
     click_plus_upgrade = new_money
     change_money(plus_upgrade_amount_text, new_money, "+", " за клик", False)
 
+
 def change_worker1_level(new_level):
     global worker1_level
     worker1_level = new_level
     change_money(worker1_level_text, worker1_level, "", " уровень", True)
 
+
 def change_music_level(new_level):
     global music_level
     music_level = new_level
     change_money(worker2_level_text, music_level, "", " уровень", True)
+
 
 def change_music_buy_price(new_money):
     global music_buy_price
@@ -147,6 +167,7 @@ def change_singer_level(new_level):
     singer_level = new_level
     change_money(worker3_level_text, singer_level, "", " уровень", True)
 
+
 def change_singer_buy_price(new_money):
     global singer_buy_price
     singer_buy_price = new_money
@@ -163,6 +184,7 @@ def change_business1_level(new_level):
     global business1_level
     business1_level = new_level
     change_money(business1_level_text, business1_level, "", " уровень", True)
+
 
 def change_business1_buy_price(new_money):
     global business1_buy_price
@@ -181,6 +203,7 @@ def change_business2_level(new_level):
     business2_level = new_level
     change_money(business2_level_text, business2_level, "", " уровень", True)
 
+
 def change_business2_buy_price(new_money):
     global business2_buy_price
     business2_buy_price = new_money
@@ -197,7 +220,7 @@ def upgrade_click():
     if money < click_plus_upgrade_price:
         return
 
-    change_worker1_level(worker1_level+1)
+    change_worker1_level(worker1_level + 1)
 
     change_coin_money(money - int(click_plus_upgrade_price))
     change_plus_money(click_plus + int(click_plus_upgrade))
@@ -318,7 +341,6 @@ def upgrade_business2():
         wrap.sprite.hide(up_coin)
         wrap.sprite.hide(plus_upgrade_amount_text)
         wrap.sprite.hide(plus_upgrade_price_text)
-
 
         wrap.sprite.hide(worker1)
         wrap.sprite.hide(worker1_level_text)
